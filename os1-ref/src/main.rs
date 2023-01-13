@@ -20,7 +20,7 @@ fn clear_bss() {
     (sbss as usize..ebss as usize).for_each(|a| unsafe { (a as *mut u8).write_volatile(0) });
 }
 
-#[no_mangle]
+#[no_mangle]//no_mangle属性可用于任何项目以禁用标准符号名称重整。项目的符号将是项目名称的标识符。
 pub fn rust_main() -> ! {
     extern "C" {
         fn stext();

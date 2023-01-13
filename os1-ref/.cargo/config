@@ -2,6 +2,9 @@
 target = "riscv64gc-unknown-none-elf"
 
 [target.riscv64gc-unknown-none-elf]
+## 链接器总是使用链接脚本。如果你自己不提供，链接器将使用一个默认的链接脚本，这个脚本被编译进了链接器可执行文件中。你可以使用'--verbose '命令行选项来显示默认的链接脚本。
+##某些命令行选项，如' -r '或' -N '，将影响默认链接脚本。
+##你可以使用' -T '命令行选项提供自己的链接脚本。当这样做时，指定的链接脚本将替换默认的链接脚本。
 rustflags = [
-    "-Clink-arg=-Tsrc/linker.ld", "-Cforce-frame-pointers=yes"
+    "-Clink-arg=-Tsrc/linker.ld", "-Cforce-frame-pointers=yes" ##该标签可以强制栈帧指针的使用？todo 为什么 不清楚 
 ]
