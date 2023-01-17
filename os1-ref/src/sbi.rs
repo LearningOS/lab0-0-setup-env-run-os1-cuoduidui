@@ -1,9 +1,15 @@
 #![allow(unused)]
 
 const SBI_SET_TIMER: usize = 0;
-const SBI_CONSOLE_PUTCHAR: usize = 1;
+const SBI_CONSOLE_PUTCHAR: usize = 1;//在屏幕上输出一个字符
 const SBI_CONSOLE_GETCHAR: usize = 2;
 const SBI_SHUTDOWN: usize = 8;
+
+const SBI_CLEAR_IPI: usize = 3;
+const SBI_SEND_IPI: usize = 4;
+const SBI_REMOTE_FENCE_I: usize = 5;
+const SBI_REMOTE_SFENCE_VMA: usize = 6;
+const SBI_REMOTE_SFENCE_VMA_ASID: usize = 7;
 
 #[inline(always)]//https://qastack.cn/programming/37639276/when-should-inline-be-used-in-rust
 fn sbi_call(which: usize, arg0: usize, arg1: usize, arg2: usize) -> usize {
@@ -18,7 +24,7 @@ fn sbi_call(which: usize, arg0: usize, arg1: usize, arg2: usize) -> usize {
             // 分配的寄存器将包含<expr>asm 代码开头的值。
             // 分配的寄存器必须在 asm 代码末尾包含相同的值（除非 alateout分配给同一寄存器）。
         core::arch::asm!(
-            "li x16, 0",//用于加载立即值的伪指令
+            "li x16, 0",// li 是 Load Immediate 的缩写，也即将一个立即数加载到某个寄存器 因此这条指令可以看做将寄存器 x16 赋值为 0
             "ecall",//(环境\系统调用）申请内核服务
             inlateout("x10") arg0 => ret,
             in("x11") arg1,
