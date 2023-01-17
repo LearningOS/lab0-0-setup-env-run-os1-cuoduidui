@@ -2,6 +2,9 @@
 // https://zhuanlan.zhihu.com/p/270379116
 #![no_std]
 #![no_main]
+#![feature(panic_info_message)]
+
+use log::*;
 
 #[macro_use]
 mod console;
@@ -47,10 +50,29 @@ fn clear_bss() {
 }
 #[no_mangle]
 pub fn rust_main() -> ! {
-    print!("Hello, ");
-    println!("world!");
+    extern "C" {
+        fn stext();
+        fn etext();
+        fn srodata();
+        fn erodata();
+        fn sdata();
+        fn edata();
+        fn sbss();
+        fn ebss();
+        fn boot_stack();
+        fn boot_stack_top();
+    }
     clear_bss();
-    sbi::shutdown();
-   
+    logging::init();
+    println!("Hello, world!");
+    trace!(".text [{:#x}, {:#x})", stext as usize, etext as usize);
+    debug!(".rodata [{:#x}, {:#x})", srodata as usize, erodata as usize);
+    info!(".data [{:#x}, {:#x})", sdata as usize, edata as usize);
+    warn!(
+        "boot_stack [{:#x}, {:#x})",
+        boot_stack as usize, boot_stack_top as usize
+    );
+    error!(".bss [{:#x}, {:#x})", sbss as usize, ebss as usize);
+    panic!("Shutdown machine!");
 }
 
